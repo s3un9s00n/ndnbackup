@@ -8,7 +8,7 @@
 
 ## Server Environment
 | Type | Server Info | IP Addr | Environment | README |
-|:-----|:----------------|:-----|:------------|:------------:|  
+|:-----|:--------------------------|:-----|:------------|:------------:|  
 | Consumer | ndn-consrouter:ndn | 192.168.0.106 | Ubuntu 20.04.3 LTS, Docker version 20.10.12, build e91ed57 | [src/ndn_dev-ConsumerA][Consumer-A] [src/ndn_dev-ConsumerB][Consumer-B] |
 | Router | ndn-router1:router | 192.168.0.99 | Ubuntu 20.04.3 LTS | [src/ndn_dev-router][router] |
 | Router | ndn-router2:router | 192.168.0.100 | Ubuntu 20.04.3 LTS | [src/ndn_dev-router][router] |
