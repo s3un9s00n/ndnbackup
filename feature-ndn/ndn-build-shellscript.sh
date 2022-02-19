@@ -1,12 +1,20 @@
 #!/bin/bash
 
 echo "[*] Running"
+echo "[+] Initialize Settings"
+
+echo "1. Base Directory Setting"
 mkdir -p /tmp/src/app
+chown -R ndn-producer:ndn-producer /tmp/src/app
+chmod -R 755 /tmp/src/app
+
+echo "2. Packages Update"
 apt-get update
 
 sleep 1
 
 echo "[*] ==============================Install Dependency Packages==================================="
+echo "[+] Packages install"
 apt-get install -y vim net-tools git curl wget unzip && \
     apt-get install -y build-essential pkg-config python3-minimal libboost-all-dev libssl-dev && \
     apt-get install -y libsqlite3-dev doxygen graphviz python3-pip python3-sphinx software-properties-common
@@ -15,7 +23,10 @@ echo "[*] =================================Install Dependency Packages Done...==
 sleep 1
 
 echo "[*] =================================Settings Dependency Packages==================================+"
+echo "1. Base Directory Setting"
 mkdir -p /tmp/src/app/.local/bin
+chown -R ndn-producer:ndn-producer /tmp/src/app/.local/bin
+chmod -R 755 /tmp/src/app/.local/bin
 export PATH="/tmp/src/app/.local/bin${PATH:+:}${PATH}"
 echo "[*] =================================Settings Dependency Packages Done...=================================="
 
@@ -29,6 +40,8 @@ mv ndn-cxx /tmp/src/app
 mv NFD /tmp/src/app
 ls -al /tmp/src/app
 
+chown -R ndn-producer:ndn-producer /tmp/src/app/ndn-cxx
+chown -R ndn-producer:ndn-producer /tmp/src/app/NFD
 chmod 755 -R /tmp/src/app/ndn-cxx
 chmod 755 -R /tmp/src/app/NFD
 echo "[*] =================================Download NDN OpenSource from Github Done...=================================="
@@ -44,7 +57,7 @@ cd /tmp/src/app/ndn-cxx && \
 echo /usr/local/lib | tee /etc/ld.so.conf.d/ndn-cxx.conf
 export LD_LIBRARY_PATH=/usr/local/lib
 
-echo "[*] =================================Build NDN-CXX Done...=================================₩="
+echo "[*] =================================Build NDN-CXX Done...=================================="
 
 sleep 1
 
