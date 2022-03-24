@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  consumerA:
+    image: dockerndn:0.2
+    volumes:
+      - "/home/lsh/Desktop/tmp/python-src/shared:/usr/src/app"
+    ports:
+      - "20001:6363/tcp"
+      - "20002:6363/udp"
+    networks:
+      - default
+
+  consumerB:
+    image: dockerndn:0.2
+    volumes:
+      - "/home/lsh/Desktop/tmp/python-src/shared:/usr/src/app"
+    ports:
+      - "20003:6363/tcp"
+      - "20004:6363/udp"
+    networks:
+      - default
+
