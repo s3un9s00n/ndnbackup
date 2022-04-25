@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  producer_testC:
+    image: cpd9957/named_data_networking:0.1
+    volumes:
+      - "/home/lsh/Desktop/CALab-NDN-Dev/tmp/nonfpe-build/producer:/usr/src/app/shared"
+    ports:
+      - "30241:6363/tcp"
+      - "30241:6363/udp"
+      - "30242:8080/tcp"
+#    command:
+#      - "nfdc face create tcp4://192.168.0.119:30141"
+#      - "nfdc route add /example/testApp/randomData tcp4://192.168.0.119:30141"
+    networks:
+      - default
+
+  producer_testD:
+    image: cpd9957/named_data_networking:0.1
+    volumes:
+      - "/home/lsh/Desktop/CALab-NDN-Dev/tmp/nonfpe-build/producer:/usr/src/app/shared"
+    ports:
+      - "30243:6363/tcp"
+      - "30243:6363/udp"
+      - "30244:8080/tcp"
+    networks:
+      - default
+

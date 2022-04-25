@@ -2,22 +2,16 @@ version: '3'
 
 services:
   consumerA:
-    image: dockerndn:0.2
+    image: cpd9957/named_data_networking:fpe-traffic-0.1
     volumes:
-      - "/home/lsh/Desktop/tmp/python-src/shared:/usr/src/app"
+      - "/home/lsh/Desktop/CALab-NDN-Dev/src/consumer/shared:/usr/src/app/shared"
     ports:
-      - "20001:6363/tcp"
-      - "20002:6363/udp"
-    networks:
-      - default
-
-  consumerB:
-    image: dockerndn:0.2
-    volumes:
-      - "/home/lsh/Desktop/tmp/python-src/shared:/usr/src/app"
-    ports:
-      - "20003:6363/tcp"
-      - "20004:6363/udp"
+      - "30141:6363/tcp"
+      - "30141:6363/udp"
+      - "30142:8080/tcp"
+#    command:
+#      - "nfdc face create tcp4://192.168.0.119:30141"
+#      - "nfdc route add /example/testApp/randomData tcp4://192.168.0.119:30141"
     networks:
       - default
 
