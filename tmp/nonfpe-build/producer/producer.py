@@ -59,8 +59,8 @@ def main():
 
     app = NDNApp()
 
-    NameFPE = NameComponentSplitter("/cryptography/application/laboratory/video")
-    name = Name.normalize(NameFPE)
+    #NameFPE = NameComponentSplitter("/cryptography/application/laboratory/video")
+    name = Name.normalize("/hello/world/112")
     name.append(Component.from_version(timestamp()))
 
     with open(sys.argv[1], 'rb') as f:
@@ -70,19 +70,26 @@ def main():
                                     data[i*SEGMENT_SIZE:(i+1)*SEGMENT_SIZE],
                                     freshness_period=10000,
                                     final_block_id=Component.from_segment(seg_cnt - 1))
-                   for i in range(seg_cnt)]
+            			    for i in range(seg_cnt)]
     print(f'Created {seg_cnt} chunks under name {Name.to_str(name)}')
 
+    #@app.route(name)
+    #def on_interest(name: FormalName, param: InterestParam, _app_param: Optional[BinaryStr]):
+    #    print(f'>> I: {Name.to_str(name)}, {param}')
+    #    content = "Hello, world!".encode()
+    #    app.put_data(name, content=content, freshness_period=10000)
+    #    print(f'<< D: {Name.to_str(name)}')
+    #    print(MetaInfo(freshness_period=10000))
+    #    print(f'Content: (size: {len(content)})')
+    #    print('')
     @app.route(name)
-    def on_interest(name: FormalName, param: InterestParam, _app_param: Optional[BinaryStr]):
-        print(f'>> I: {Name.to_str(name)}, {param}')
-        content = "Hello, world!".encode()
-        app.put_data(name, content=content, freshness_period=10000)
-        print(f'<< D: {Name.to_str(name)}')
-        print(MetaInfo(freshness_period=10000))
-        print(f'Content: (size: {len(content)})')
-        print('')
-
+    def on_interest(int_name, _int_param, _app_param):
+        if Component.get_type(int_name[-1]) == Component.TYPE_SEGMENT:
+            seg_no = Component.to_number(int_name[-1])
+        else:
+            seg_no = 0
+        if seg_no < seg_cnt:
+            app.put_raw_packet(packets[seg_no])
     app.run_forever()
 
 if __name__ == '__main__':
