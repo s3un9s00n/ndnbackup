@@ -17,9 +17,39 @@
 # -----------------------------------------------------------------------------
 import logging
 import ndn.utils
+import sys
 from ndn.app import NDNApp
 from ndn.types import InterestNack, InterestTimeout, InterestCanceled, ValidationFailure
 from ndn.encoding import Name, Component, InterestParam
+from ff3 import FF3Cipher
+from ctypes import *
+import base64
+import binascii
+from ndn.app_support.segment_fetcher import segment_fetcher
+
+
+def ff3_cipher(PlainText: str) -> str:
+    key = "2DE79D232DF5585D68CE47882AE256D6"
+    tweak = "CBD09280979564"
+    CipherObj = FF3Cipher(key, tweak, radix=36)
+
+    return CipherObj.encrypt(PlainText)
+
+
+def NameComponentSplitter(PlainText: str):
+    Slash_index = [pos for pos, char in enumerate(PlainText) if char == '/']
+    NameComponent_index = PlainText.split('/')
+
+    FinalNameComponent = []
+
+    del NameComponent_index[0]
+
+    for idx in range(len(Slash_index)):
+        FinalNameComponent.append('/')
+        FinalNameComponent.append(ff3_cipher(NameComponent_index[idx]))
+
+    FinalNameComponent = ''.join(FinalNameComponent)
+    return FinalNameComponent
 
 
 logging.basicConfig(format='[{asctime}]{levelname}:{message}',
@@ -27,14 +57,23 @@ logging.basicConfig(format='[{asctime}]{levelname}:{message}',
                     level=logging.INFO,
                     style='{')
 
-
 app = NDNApp()
 
 
 async def main():
     try:
+#        NameFPE = NameComponentSplitter("/cryptography/application/laboratory/video/1029121")
         timestamp = ndn.utils.timestamp()
-        name = Name.from_str('/example/testApp/randomData') + [Component.from_timestamp(timestamp)]
+
+        #name = Name.from_str("/hello/world/112") + [Component.from_timestamp(timestamp)]
+        cnt=0
+        name=sys.argv[1]
+        async for seg in segment_fetcher(app, name):
+            print(bytes(seg), end='')
+            cnt += 1
+        print(f'\n{cnt} segments fetched.')
+        #app.shutdown()
+
         print(f'Sending Interest {Name.to_str(name)}, {InterestParam(must_be_fresh=True, lifetime=6000)}')
         data_name, meta_info, content = await app.express_interest(
             name, must_be_fresh=True, can_be_prefix=False, lifetime=6000)
