@@ -59,9 +59,9 @@ def main():
 
     app = NDNApp()
 
-    NameFPE = NameComponentSplitter("/cryptography/application/laboratory/video")
-    name = Name.normalize(NameFPE)
-    #name.append(Component.from_version(timestamp()))
+    #NameFPE = NameComponentSplitter("/cryptography/application/laboratory/video")
+    name = Name.normalize("/hello/world/112")
+    name.append(Component.from_version(timestamp()))
 
     with open(sys.argv[1], 'rb') as f:
         data = f.read()
