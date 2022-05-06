@@ -26,7 +26,8 @@ from ctypes import *
 import base64
 import binascii
 from ndn.app_support.segment_fetcher import segment_fetcher
-
+import time
+from datetime import timedelta
 
 def ff3_cipher(PlainText: str) -> str:
     key = "2DE79D232DF5585D68CE47882AE256D6"
@@ -62,12 +63,16 @@ app = NDNApp()
 
 async def main():
     try:
-#        NameFPE = NameComponentSplitter("/cryptography/application/laboratory/video/1029121")
+        start = time.process_time()
+        #NameFPE = NameComponentSplitter("/cryptography/application/laboratory/video")
         timestamp = ndn.utils.timestamp()
+        print(timestamp)
 
-        #name = Name.from_str("/hello/world/112") + [Component.from_timestamp(timestamp)]
+        #name = Name.froewwe423m_str("/hello/world/112") + [Component.from_timestamp(timestamp)]
         cnt=0
-        name=sys.argv[1]
+        name=NameComponentSplitter(sys.argv[1])
+        #name=name+sys.argv[2]
+        print(name)
         async for seg in segment_fetcher(app, name):
             print(bytes(seg), end='')
             cnt += 1
@@ -75,6 +80,11 @@ async def main():
         #app.shutdown()
 
         print(f'Sending Interest {Name.to_str(name)}, {InterestParam(must_be_fresh=True, lifetime=6000)}')
+        
+        end = time.process_time()
+        print("Time elapsed: ", end - start)  # seconds
+        print("Time elapsed: ", timedelta(seconds=end-start))
+
         data_name, meta_info, content = await app.express_interest(
             name, must_be_fresh=True, can_be_prefix=False, lifetime=6000)
 
@@ -91,7 +101,6 @@ async def main():
         print(f'Data failed to validate')
     finally:
         app.shutdown()
-
 
 if __name__ == '__main__':
     app.run_forever(after_start=main())
